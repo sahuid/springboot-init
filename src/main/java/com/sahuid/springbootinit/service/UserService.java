@@ -10,6 +10,8 @@ import com.sahuid.springbootinit.model.entity.User;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.sahuid.springbootinit.model.vo.UserVo;
 
+import javax.servlet.http.HttpServletRequest;
+
 /**
 * @author Lenovo
 * @description 针对表【user】的数据库操作Service
@@ -17,13 +19,13 @@ import com.sahuid.springbootinit.model.vo.UserVo;
 */
 public interface UserService extends IService<User> {
 
-    R<UserVo> userLogin(UserLoginDto userLoginDto);
+    R<UserVo> userLogin(UserLoginDto userLoginDto, HttpServletRequest request);
 
     R<Void> userRegister(UserRegisterDto userRegisterDto);
 
     R<Void> userUpdate(UserUpdateDto userUpdateDto);
 
-    R<UserVo> getCurrentUser(Long id);
+    R<UserVo> getCurrentUser(HttpServletRequest request);
 
     R<Page<User>> queryUserByPage(UserQueryDto userQueryDto);
 }

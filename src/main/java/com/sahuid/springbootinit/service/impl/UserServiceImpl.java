@@ -20,6 +20,8 @@ import com.sahuid.springbootinit.service.UserService;
 import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
 
+import javax.servlet.http.HttpServletRequest;
+
 /**
 * @author Lenovo
 * @description 针对表【user】的数据库操作Service实现
@@ -29,7 +31,7 @@ import org.springframework.util.DigestUtils;
 public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements UserService {
 
     @Override
-    public R<UserVo> userLogin(UserLoginDto userLoginDto) {
+    public R<UserVo> userLogin(UserLoginDto userLoginDto, HttpServletRequest request) {
         if (userLoginDto == null) {
             throw new RequestParamException("请求参数错误");
         }
@@ -53,6 +55,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
             throw new DataBaseAbsentException("数据不存在");
         }
         UserVo userVo = UserVo.userToVo(user);
+        request.getSession().setAttribute("user", userVo);
         return R.ok(userVo, "登录成功");
 
     }
@@ -110,15 +113,12 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     }
 
     @Override
-    public R<UserVo> getCurrentUser(Long id) {
-        if (id == null || id <= 0) {
-            throw new RequestParamException("请求参数错误");
+    public R<UserVo> getCurrentUser(HttpServletRequest request) {
+        Object user = request.getSession().getAttribute("user");
+        if(user == null) {
+            throw new RequestParamException("当前用户未登录");
         }
-        User user = this.getById(id);
-        if (user == null) {
-            throw new DataBaseAbsentException("数据不存在");
-        }
-        UserVo userVo = UserVo.userToVo(user);
+        UserVo userVo = (UserVo) user;
         return R.ok(userVo);
     }
 

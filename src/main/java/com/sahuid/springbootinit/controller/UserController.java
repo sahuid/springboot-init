@@ -13,6 +13,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+
 @RequestMapping("/user")
 @RestController
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
@@ -20,8 +22,8 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping("/login")
-    public R<UserVo> userLogin(@RequestBody UserLoginDto userLoginDto) {
-        return userService.userLogin(userLoginDto);
+    public R<UserVo> userLogin(@RequestBody UserLoginDto userLoginDto, HttpServletRequest request) {
+        return userService.userLogin(userLoginDto, request);
     }
 
     @PostMapping("/register")
@@ -35,8 +37,8 @@ public class UserController {
     }
 
     @GetMapping("/me")
-    public R<UserVo> getCurrentUser(@RequestParam("id") Long id){
-        return userService.getCurrentUser(id);
+    public R<UserVo> getCurrentUser(HttpServletRequest request){
+        return userService.getCurrentUser(request);
     }
 
 
