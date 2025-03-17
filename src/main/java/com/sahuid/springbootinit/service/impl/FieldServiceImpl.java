@@ -6,13 +6,22 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.sahuid.springbootinit.exception.DataBaseAbsentException;
 import com.sahuid.springbootinit.exception.RequestParamException;
 import com.sahuid.springbootinit.model.entity.Field;
+import com.sahuid.springbootinit.model.entity.FieldGroup;
+import com.sahuid.springbootinit.model.entity.GroupManager;
 import com.sahuid.springbootinit.model.req.field.AddFieldInfoRequest;
+import com.sahuid.springbootinit.model.req.field.AddFieldToGroupRequest;
 import com.sahuid.springbootinit.model.req.field.QueryFieldByPageRequest;
 import com.sahuid.springbootinit.model.req.field.UpdateFieldByIdRequest;
+import com.sahuid.springbootinit.service.FieldGroupService;
 import com.sahuid.springbootinit.service.FieldService;
 import com.sahuid.springbootinit.mapper.FieldMapper;
+import com.sahuid.springbootinit.service.GroupManagerService;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
+
+import javax.annotation.Resource;
+import java.util.List;
 
 /**
 * @author wxb
@@ -22,6 +31,14 @@ import org.springframework.stereotype.Service;
 @Service
 public class FieldServiceImpl extends ServiceImpl<FieldMapper, Field>
     implements FieldService{
+
+    @Resource
+    @Lazy
+    private GroupManagerService groupManagerService;
+
+    @Resource
+    @Lazy
+    private FieldGroupService fieldGroupService;
 
     @Override
     public void addFieldInfo(AddFieldInfoRequest addFieldInfoRequest) {
@@ -67,13 +84,36 @@ public class FieldServiceImpl extends ServiceImpl<FieldMapper, Field>
 
     @Override
     public void deleteFieldById(Long fieldId) {
-        if (fieldId == null) {
-            throw new RequestParamException("请求参数缺失");
+
+    }
+
+    @Override
+    public void addFieldToGroup(AddFieldToGroupRequest addFieldToGroupRequest) {
+        Long groupId = addFieldToGroupRequest.getGroupId();
+        Long fieldId = addFieldToGroupRequest.getFieldId();
+        if (groupId == null || fieldId == null) {
+            throw new RequestParamException("请求参数错误");
         }
-        boolean remove = this.removeById(fieldId);
-        if (!remove){
-            throw new RuntimeException("删除失败");
+        Field field = this.getById(fieldId);
+        if (field == null) {
+            throw new DataBaseAbsentException("土地信息为空");
         }
+        GroupManager groupManager = groupManagerService.getById(groupId);
+        if (groupManager == null) {
+            throw new DataBaseAbsentException("组信息为空");
+        }
+        FieldGroup fieldGroup = new FieldGroup();
+        fieldGroup.setFieldId(fieldId);
+        fieldGroup.setGroupId(groupId);
+        boolean save = fieldGroupService.save(fieldGroup);
+        if (!save) {
+            throw new RuntimeException("已经存在了该组");
+        }
+    }
+
+    @Override
+    public List<Field> queryFieldList() {
+        return this.list();
     }
 }
 

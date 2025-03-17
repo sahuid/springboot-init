@@ -8,11 +8,11 @@
             <id property="id" column="id" />
             <result property="deviceId" column="deviceId" />
             <result property="deviceType" column="deviceType" />
-            <result property="deviceAddress" column="deviceAddress" />
+            <result property="deviceManagerNumber" column="deviceManagerNumber" />
             <result property="deviceStatus" column="deviceStatus" />
     </resultMap>
 
     <sql id="Base_Column_List">
-        id,deviceId,deviceType,deviceAddress,deviceStatus
+        id,deviceId,deviceType,deviceManagerNumber,deviceStatus
     </sql>
 </mapper>

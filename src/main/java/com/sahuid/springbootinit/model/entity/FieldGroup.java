@@ -9,31 +9,20 @@ import lombok.Data;
 
 /**
  * 
- * @TableName field
+ * @TableName field_group
  */
-@TableName(value ="field")
+@TableName(value ="field_group")
 @Data
-public class Field implements Serializable {
+public class FieldGroup implements Serializable {
     /**
-     * 主键id
+     * 地块id
      */
-    @TableId(type = IdType.AUTO)
-    private Long id;
+    private Long fieldId;
 
     /**
-     * 地块编号
+     * 分组id
      */
-    private String fieldId;
-
-    /**
-     * 灌溉单元编号
-     */
-    private String fieldUnitId;
-
-    /**
-     * 经纬度信息
-     */
-    private String fieldRange;
+    private Long groupId;
 
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;

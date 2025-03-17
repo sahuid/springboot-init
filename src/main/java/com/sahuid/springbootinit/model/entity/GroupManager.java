@@ -9,36 +9,21 @@ import lombok.Data;
 
 /**
  * 
- * @TableName device
+ * @TableName group_manager
  */
-@TableName(value ="device")
+@TableName(value ="group_manager")
 @Data
-public class Device implements Serializable {
+public class GroupManager implements Serializable {
     /**
-     * 主键 id
+     * 主键id
      */
     @TableId(type = IdType.AUTO)
     private Long id;
 
     /**
-     * 设备编号
+     * 组名称
      */
-    private String deviceId;
-
-    /**
-     * 设备类型（0：阀门/1：水闸/2：施肥机）
-     */
-    private Integer deviceType;
-
-    /**
-     * 设备灌溉区/分组编号
-     */
-    private String deviceManagerNumber;
-
-    /**
-     * 设备状态（0表示关；1表示开）
-     */
-    private Integer deviceStatus;
+    private String groupName;
 
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;

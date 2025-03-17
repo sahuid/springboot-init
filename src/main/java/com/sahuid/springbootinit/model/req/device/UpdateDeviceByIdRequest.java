@@ -28,9 +28,9 @@ public class UpdateDeviceByIdRequest {
     private Integer deviceType;
 
     /**
-     * 设备灌溉区域的经纬度（json 数组）
+     * 设备管理的分组/灌溉单元编号
      */
-    private String deviceAddress;
+    private String deviceManagerNumber;
 
     /**
      * 设备状态（0表示关；1表示开）

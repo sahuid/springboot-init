@@ -4,8 +4,11 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.sahuid.springbootinit.model.entity.Field;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.sahuid.springbootinit.model.req.field.AddFieldInfoRequest;
+import com.sahuid.springbootinit.model.req.field.AddFieldToGroupRequest;
 import com.sahuid.springbootinit.model.req.field.QueryFieldByPageRequest;
 import com.sahuid.springbootinit.model.req.field.UpdateFieldByIdRequest;
+
+import java.util.List;
 
 /**
 * @author wxb
@@ -38,4 +41,16 @@ public interface FieldService extends IService<Field> {
      * @param fieldId
      */
     void deleteFieldById(Long fieldId);
+
+    /**
+     * 添加土地到分组中
+     * @param addFieldToGroupRequest
+     */
+    void addFieldToGroup(AddFieldToGroupRequest addFieldToGroupRequest);
+
+    /**
+     * 查询地块列表
+     * @return
+     */
+    List<Field> queryFieldList();
 }

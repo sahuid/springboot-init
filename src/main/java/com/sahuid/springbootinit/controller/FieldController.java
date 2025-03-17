@@ -5,12 +5,14 @@ import com.sahuid.springbootinit.common.PageRequest;
 import com.sahuid.springbootinit.common.R;
 import com.sahuid.springbootinit.model.entity.Field;
 import com.sahuid.springbootinit.model.req.field.AddFieldInfoRequest;
+import com.sahuid.springbootinit.model.req.field.AddFieldToGroupRequest;
 import com.sahuid.springbootinit.model.req.field.QueryFieldByPageRequest;
 import com.sahuid.springbootinit.model.req.field.UpdateFieldByIdRequest;
 import com.sahuid.springbootinit.service.FieldService;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * @Author: wxb
@@ -48,5 +50,17 @@ public class FieldController {
     public R<Void> deleteFieldById(Long fieldId) {
         fieldService.deleteFieldById(fieldId);
         return R.ok("删除成功");
+    }
+
+    @PostMapping("/to/group")
+    public R<Void> addFieldToGroup(@RequestBody AddFieldToGroupRequest addFieldToGroupRequest){
+        fieldService.addFieldToGroup(addFieldToGroupRequest);
+        return R.ok("添加成功");
+    }
+
+    @GetMapping("/list")
+    public R<List<Field>> queryFieldList() {
+        List<Field> list = fieldService.queryFieldList();
+        return R.ok(list, "查询成功");
     }
 }
