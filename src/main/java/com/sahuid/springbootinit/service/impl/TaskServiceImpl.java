@@ -4,11 +4,14 @@ import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.ObjectUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.sahuid.springbootinit.exception.DataBaseAbsentException;
 import com.sahuid.springbootinit.exception.RequestParamException;
+import com.sahuid.springbootinit.model.entity.Field;
 import com.sahuid.springbootinit.model.entity.Task;
 import com.sahuid.springbootinit.model.req.field.AddFieldInfoRequest;
 import com.sahuid.springbootinit.model.req.task.AddTaskInfoRequest;
 import com.sahuid.springbootinit.model.req.task.QueryTaskByPage;
+import com.sahuid.springbootinit.model.req.task.UpdateTaskByIdRequest;
 import com.sahuid.springbootinit.service.TaskService;
 import com.sahuid.springbootinit.mapper.TaskMapper;
 import org.apache.commons.lang3.StringUtils;
@@ -61,6 +64,34 @@ public class TaskServiceImpl extends ServiceImpl<TaskMapper, Task>
         Page<Task> page = new Page<>(currPage, pageSize);
         this.page(page);
         return page;
+    }
+
+    @Override
+    public void updateTaskById(UpdateTaskByIdRequest updateTaskByIdRequest) {
+        Long taskId = updateTaskByIdRequest.getId();
+        if (taskId == null) {
+            throw new RequestParamException("请求参数错误");
+        }
+        Task task = this.getById(taskId);
+        if (task == null) {
+            throw new DataBaseAbsentException("数据不存在");
+        }
+        BeanUtil.copyProperties(updateTaskByIdRequest, task, false);
+        boolean update = this.updateById(task);
+        if (!update) {
+            throw new RuntimeException("数据修改失败");
+        }
+    }
+
+    @Override
+    public void deleteTaskById(Long taskId) {
+        if (taskId == null) {
+            throw new RequestParamException("请求参数缺失");
+        }
+        boolean remove = this.removeById(taskId);
+        if (!remove){
+            throw new RuntimeException("删除失败");
+        }
     }
 }
 

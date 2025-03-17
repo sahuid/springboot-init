@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.sahuid.springbootinit.model.req.field.AddFieldInfoRequest;
 import com.sahuid.springbootinit.model.req.task.AddTaskInfoRequest;
 import com.sahuid.springbootinit.model.req.task.QueryTaskByPage;
+import com.sahuid.springbootinit.model.req.task.UpdateTaskByIdRequest;
 
 /**
 * @author wxb
@@ -16,7 +17,7 @@ public interface TaskService extends IService<Task> {
 
     /**
      * 添加任务信息
-     * @param addFieldInfoRequest
+     * @param addTaskInfoRequest
      */
     void addTaskInfo(AddTaskInfoRequest addTaskInfoRequest);
 
@@ -26,4 +27,16 @@ public interface TaskService extends IService<Task> {
      * @return
      */
     Page<Task> queryTaskByPage(QueryTaskByPage queryTaskByPage);
+
+    /**
+     * 根据 id 修改任务信息
+     * @param updateTaskByIdRequest
+     */
+    void updateTaskById(UpdateTaskByIdRequest updateTaskByIdRequest);
+
+    /**
+     * 根据 id 删除任务信息
+     * @param taskId
+     */
+    void deleteTaskById(Long taskId);
 }

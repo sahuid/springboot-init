@@ -5,6 +5,7 @@ import com.sahuid.springbootinit.model.entity.Device;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.sahuid.springbootinit.model.req.device.AddDeviceInfoRequest;
 import com.sahuid.springbootinit.model.req.device.QueryDeviceByPageRequest;
+import com.sahuid.springbootinit.model.req.device.UpdateDeviceByIdRequest;
 
 /**
 * @author wxb
@@ -25,4 +26,16 @@ public interface DeviceService extends IService<Device> {
      * @return
      */
     Page<Device> queryDeviceInfoByPage(QueryDeviceByPageRequest queryDeviceByPageRequest);
+
+    /**
+     * 根据 id 修改设备信息
+     * @param updateDeviceByIdRequest
+     */
+    void updateDeviceById(UpdateDeviceByIdRequest updateDeviceByIdRequest);
+
+    /**
+     * 根据 id 删除设备信息
+     * @param deviceId
+     */
+    void deleteDeviceById(Long deviceId);
 }

@@ -5,6 +5,8 @@ import com.sahuid.springbootinit.common.R;
 import com.sahuid.springbootinit.model.entity.Device;
 import com.sahuid.springbootinit.model.req.device.AddDeviceInfoRequest;
 import com.sahuid.springbootinit.model.req.device.QueryDeviceByPageRequest;
+import com.sahuid.springbootinit.model.req.device.UpdateDeviceByIdRequest;
+import com.sahuid.springbootinit.model.req.task.UpdateTaskByIdRequest;
 import com.sahuid.springbootinit.service.DeviceService;
 import org.springframework.web.bind.annotation.*;
 
@@ -33,5 +35,17 @@ public class DeviceController {
     public R<Page<Device>> queryDeviceInfoByPage(QueryDeviceByPageRequest queryDeviceByPageRequest) {
         Page<Device> page = deviceService.queryDeviceInfoByPage(queryDeviceByPageRequest);
         return R.ok(page, "查询成功");
+    }
+
+    @PutMapping("/update")
+    public R<Void> updateFieldById(@RequestBody UpdateDeviceByIdRequest updateDeviceByIdRequest) {
+        deviceService.updateDeviceById(updateDeviceByIdRequest);
+        return R.ok("修改成功");
+    }
+
+    @DeleteMapping("/delete")
+    public R<Void> deleteFieldById(Long deviceId) {
+        deviceService.deleteDeviceById(deviceId);
+        return R.ok("删除成功");
     }
 }

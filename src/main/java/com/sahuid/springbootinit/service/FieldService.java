@@ -5,6 +5,7 @@ import com.sahuid.springbootinit.model.entity.Field;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.sahuid.springbootinit.model.req.field.AddFieldInfoRequest;
 import com.sahuid.springbootinit.model.req.field.QueryFieldByPageRequest;
+import com.sahuid.springbootinit.model.req.field.UpdateFieldByIdRequest;
 
 /**
 * @author wxb
@@ -25,4 +26,16 @@ public interface FieldService extends IService<Field> {
      * @return
      */
     Page<Field> queryFieldInfoByPage(QueryFieldByPageRequest queryFieldByPageRequest);
+
+    /**
+     * 根据 id 修改地块信息
+     * @param updateFieldByIdRequest
+     */
+    void updateFieldById(UpdateFieldByIdRequest updateFieldByIdRequest);
+
+    /**
+     * 根据 id 删除地块信息
+     * @param fieldId
+     */
+    void deleteFieldById(Long fieldId);
 }
