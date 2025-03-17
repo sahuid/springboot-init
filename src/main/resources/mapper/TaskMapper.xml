@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sahuid.springbootinit.mapper.TaskMapper">
+
+    <resultMap id="BaseResultMap" type="com.sahuid.springbootinit.model.entity.Task">
+            <id property="id" column="id" />
+            <result property="fieldId" column="fieldId" />
+            <result property="fieldUnitId" column="fieldUnitId" />
+            <result property="taskId" column="taskId" />
+            <result property="water" column="water" />
+            <result property="fertilizerN" column="fertilizerN" />
+            <result property="fertilizerP" column="fertilizerP" />
+            <result property="fertilizerK" column="fertilizerK" />
+            <result property="startTime" column="startTime" />
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,fieldId,fieldUnitId,taskId,water,fertilizerN,
+        fertilizerP,fertilizerK,startTime
+    </sql>
+</mapper>

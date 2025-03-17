@@ -3,10 +3,10 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.sahuid</groupId>
-    <artifactId>springboot-init</artifactId>
+    <artifactId>irrigation-system</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>springboot-init</name>
-    <description>springboot-init</description>
+    <name>irrigation-system</name>
+    <description>irrigation-system</description>
     <properties>
         <java.version>17</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -68,6 +68,10 @@
             <groupId>com.github.xiaoymin</groupId>
             <artifactId>knife4j-spring-boot-starter</artifactId>
             <version>3.0.3</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-websocket</artifactId>
         </dependency>
     </dependencies>
     <dependencyManagement>

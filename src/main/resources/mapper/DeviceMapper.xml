@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sahuid.springbootinit.mapper.DeviceMapper">
+
+    <resultMap id="BaseResultMap" type="com.sahuid.springbootinit.model.entity.Device">
+            <id property="id" column="id" />
+            <result property="deviceId" column="deviceId" />
+            <result property="deviceType" column="deviceType" />
+            <result property="deviceAddress" column="deviceAddress" />
+            <result property="deviceStatus" column="deviceStatus" />
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,deviceId,deviceType,deviceAddress,deviceStatus
+    </sql>
+</mapper>
