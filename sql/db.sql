@@ -14,11 +14,11 @@ CREATE TABLE `user` (
                         `userPhone` char(11) DEFAULT NULL COMMENT '用户手机号',
                         `userRole` tinyint unsigned NOT NULL DEFAULT '0' COMMENT '用户权限: 0:普通用户/1:管理员',
                         `userPicture` varchar(1024) DEFAULT NULL COMMENT '用户头像',
-                        `createTime` datetime NOT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '创建时间',
-                        `updateTime` datetime NOT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
-                        `isDelete` tinyint NOT NULL COMMENT '逻辑删除',
+                        `createTime` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+                        `updateTime` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '更新时间',
+                        `isDelete` tinyint NOT NULL DEFAULT '0' COMMENT '逻辑删除',
                         PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 
 CREATE TABLE `device` (
