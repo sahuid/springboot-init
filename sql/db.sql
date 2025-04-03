@@ -1,4 +1,6 @@
 
+DROP DATABASE irrigation;
+
 CREATE DATABASE irrigation;
 
 use irrigation;
