@@ -29,14 +29,13 @@ public class DeviceServiceImpl extends ServiceImpl<DeviceMapper, Device>
     public void addDeviceInfo(AddDeviceInfoRequest addDeviceInfoRequest) {
         String deviceId = addDeviceInfoRequest.getDeviceId();
         Integer deviceType = addDeviceInfoRequest.getDeviceType();
-        Integer deviceStatus = addDeviceInfoRequest.getDeviceStatus();
         String deviceManagerNumber = addDeviceInfoRequest.getDeviceManagerNumber();
 
         if (StringUtils.isAnyBlank(deviceManagerNumber, deviceId)) {
             throw new RequestParamException("请求参数缺失");
         }
 
-        if (deviceType == null || deviceStatus == null) {
+        if (deviceType == null) {
             throw new RequestParamException("请求参数缺失");
         }
 

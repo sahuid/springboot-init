@@ -22,12 +22,7 @@ public class AddDeviceInfoRequest {
 
 
     /**
-     * 设备状态（0表示关；1表示开）
-     */
-    private Integer deviceStatus;
-
-    /**
-     * 设备管理的分组/灌溉单元编号
+     * 设备管理的地块/灌溉单元编号
      */
     private String deviceManagerNumber;
 }

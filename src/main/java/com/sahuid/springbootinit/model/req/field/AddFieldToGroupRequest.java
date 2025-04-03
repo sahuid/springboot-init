@@ -2,6 +2,8 @@ package com.sahuid.springbootinit.model.req.field;
 
 import lombok.Data;
 
+import java.util.List;
+
 /**
  * @Author: wxb
  * @Description: TODO
@@ -14,7 +16,7 @@ public class AddFieldToGroupRequest {
     /**
      * 地块id
      */
-    private Long fieldId;
+    private List<Long> fieldId;
 
     /**
      * 分组id

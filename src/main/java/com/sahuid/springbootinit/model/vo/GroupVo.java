@@ -28,4 +28,9 @@ public class GroupVo {
      * 关联的地块信息
      */
     private List<Field> fieldList;
+
+    /**
+     * 位置信息
+     */
+    private String locationInfo;
 }

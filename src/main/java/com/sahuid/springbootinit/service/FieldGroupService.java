@@ -26,5 +26,5 @@ public interface FieldGroupService extends IService<FieldGroup> {
      * @param groupManager
      * @return
      */
-    List<Field> queryGroupMappingFieldIdList(GroupManager groupManager);
+    List<Field> queryGroupMappingFieldUnitList(GroupManager groupManager);
 }

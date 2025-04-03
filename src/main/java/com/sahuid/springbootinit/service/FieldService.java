@@ -7,6 +7,7 @@ import com.sahuid.springbootinit.model.req.field.AddFieldInfoRequest;
 import com.sahuid.springbootinit.model.req.field.AddFieldToGroupRequest;
 import com.sahuid.springbootinit.model.req.field.QueryFieldByPageRequest;
 import com.sahuid.springbootinit.model.req.field.UpdateFieldByIdRequest;
+import com.sahuid.springbootinit.model.vo.FieldVO;
 
 import java.util.List;
 
@@ -28,7 +29,7 @@ public interface FieldService extends IService<Field> {
      * @param queryFieldByPageRequest
      * @return
      */
-    Page<Field> queryFieldInfoByPage(QueryFieldByPageRequest queryFieldByPageRequest);
+    Page<FieldVO> queryFieldInfoByPage(QueryFieldByPageRequest queryFieldByPageRequest);
 
     /**
      * 根据 id 修改地块信息
@@ -49,8 +50,21 @@ public interface FieldService extends IService<Field> {
     void addFieldToGroup(AddFieldToGroupRequest addFieldToGroupRequest);
 
     /**
+     * 查询灌溉单元且没有分组
+     * @return
+     */
+    List<Field> queryFieldNoGroupList();
+
+    /**
      * 查询地块列表
      * @return
      */
     List<Field> queryFieldList();
+
+    /**
+     * 查询灌溉单元
+     * @return
+     */
+    List<Field> queryFieldUnitList();
+
 }

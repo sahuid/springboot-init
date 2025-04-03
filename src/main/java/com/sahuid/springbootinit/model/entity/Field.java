@@ -26,6 +26,11 @@ public class Field implements Serializable {
     private String fieldId;
 
     /**
+     * 地块id（用于区分基本灌溉单元）
+     */
+    private Long fieldParent;
+
+    /**
      * 灌溉单元编号
      */
     private String fieldUnitId;
@@ -34,6 +39,21 @@ public class Field implements Serializable {
      * 经纬度信息
      */
     private String fieldRange;
+
+    /**
+     * 灌溉面积
+     */
+    private Double fieldSize;
+
+    /**
+     * 地块名称
+     */
+    private String fieldName;
+
+    /**
+     * 组id
+     */
+    private Long groupId;
 
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;

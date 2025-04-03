@@ -43,25 +43,14 @@ public class FieldGroupServiceImpl extends ServiceImpl<FieldGroupMapper, FieldGr
     }
 
     @Override
-    public List<Field> queryGroupMappingFieldIdList(GroupManager groupManager) {
+    public List<Field> queryGroupMappingFieldUnitList(GroupManager groupManager) {
         if (groupManager == null) {
             throw new RequestParamException("组信息不能为空");
         }
         Long groupId = groupManager.getId();
-        LambdaQueryWrapper<FieldGroup> wrapper = new LambdaQueryWrapper<>();
-        wrapper.eq(FieldGroup::getGroupId, groupId);
-        // 获取组关联信息
-        List<FieldGroup> list = this.list(wrapper);
-        // 获取对应的地块id
-        List<Long> fieldIdList = list.stream()
-                .map(FieldGroup::getFieldId)
-                .collect(Collectors.toList());
-        if (fieldIdList.isEmpty()) {
-            return Collections.emptyList();
-        }
-        LambdaQueryWrapper<Field> lambdaQueryWrapper = new LambdaQueryWrapper<>();
-        lambdaQueryWrapper.in(Field::getId, fieldIdList);
-        return fieldService.list(lambdaQueryWrapper);
+        LambdaQueryWrapper<Field> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(Field::getGroupId, groupId);
+        return fieldService.list(wrapper);
     }
 }
 

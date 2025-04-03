@@ -2,6 +2,8 @@ package com.sahuid.springbootinit.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.StrUtil;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.sahuid.springbootinit.exception.DataBaseAbsentException;
@@ -22,6 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
 /**
@@ -73,8 +76,19 @@ public class GroupManagerServiceImpl extends ServiceImpl<GroupManagerMapper, Gro
     private GroupVo getGroupVo(GroupManager groupManager) {
         GroupVo groupVo = new GroupVo();
         BeanUtil.copyProperties(groupManager, groupVo, false);
-        List<Field> fields = fieldGroupService.queryGroupMappingFieldIdList(groupManager);
+        List<Field> fields = fieldGroupService.queryGroupMappingFieldUnitList(groupManager);
         groupVo.setFieldList(fields);
+        StringBuilder stringBuilder = new StringBuilder();
+        AtomicReference<Double> size = new AtomicReference<>(0d);
+        fields.forEach(field -> {
+            String fieldUnitId = field.getFieldUnitId();
+            String fieldRange = field.getFieldRange();
+            stringBuilder.append("灌溉编号：").append(fieldUnitId).append(":").append(fieldRange);
+            Double fieldSize = field.getFieldSize();
+            size.updateAndGet(v -> v + fieldSize);
+        });
+        stringBuilder.append(" ").append("总面积是：").append(size);
+        groupVo.setLocationInfo(stringBuilder.toString());
         return groupVo;
     }
 
@@ -105,12 +119,12 @@ public class GroupManagerServiceImpl extends ServiceImpl<GroupManagerMapper, Gro
         if (groupManager == null) {
             throw new DataBaseAbsentException("组不存在");
         }
-        boolean update = this.removeById(groupId);
+        this.removeById(groupId);
         // 删除 组 和 地块的关联信息
-        fieldGroupService.deleteGroup(groupManager);
-        if (!update) {
-            throw new RuntimeException("组信息删除失败");
-        }
+        LambdaUpdateWrapper<Field> wrapper = new LambdaUpdateWrapper<>();
+        wrapper.eq(Field::getGroupId,groupId);
+        wrapper.set(Field::getGroupId, null);
+        fieldService.update(wrapper);
     }
 
     @Override

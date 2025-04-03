@@ -1,15 +1,19 @@
-package com.sahuid.springbootinit.model.req.field;
+package com.sahuid.springbootinit.model.vo;
 
+import com.sahuid.springbootinit.model.entity.Field;
 import lombok.Data;
+
+import java.util.List;
 
 /**
  * @Author: wxb
  * @Description: TODO
- * @DateTime: 2025/3/10 0:14
+ * @DateTime: 2025/4/3 12:27
  **/
 @Data
-public class AddFieldInfoRequest {
+public class FieldVO {
 
+    private Long id;
 
     /**
      * 地块编号
@@ -17,13 +21,17 @@ public class AddFieldInfoRequest {
     private String fieldId;
 
     /**
+     * 地块id（用于区分基本灌溉单元）
+     */
+    private Long fieldParent;
+
+    /**
      * 灌溉单元编号
      */
     private String fieldUnitId;
 
-
     /**
-     * 地块的位置
+     * 经纬度信息
      */
     private String fieldRange;
 
@@ -33,13 +41,11 @@ public class AddFieldInfoRequest {
     private Double fieldSize;
 
     /**
-     * 地块id（用于区分基本灌溉单元）
-     */
-    private Long fieldParent;
-
-    /**
      * 地块名称
      */
     private String fieldName;
 
+
+
+    private List<Field> subField;
 }

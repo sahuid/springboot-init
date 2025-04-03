@@ -9,9 +9,13 @@
             <result property="fieldId" column="fieldId" />
             <result property="fieldUnitId" column="fieldUnitId" />
             <result property="fieldRange" column="fieldRange" />
+            <result property="fieldSize" column="fieldSize" />
+            <result property="fieldParent" column="fieldParent" />
+            <result property="fieldName" column="fieldName" />
+            <result property="groupId" column="groupId" />
     </resultMap>
 
     <sql id="Base_Column_List">
-        id,fieldId,fieldUnitId,fieldRange
+        id,fieldId,fieldUnitId,fieldRange,fieldSize,fieldParent,fieldName,groupId
     </sql>
 </mapper>
