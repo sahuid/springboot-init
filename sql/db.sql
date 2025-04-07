@@ -60,6 +60,7 @@ CREATE TABLE `task` (
 CREATE TABLE `group_manager` (
                                  `id` bigint NOT NULL AUTO_INCREMENT COMMENT '主键id',
                                  `groupName` varchar(255) NOT NULL COMMENT '组名称',
+                                 `groupRange` varchar(1024) NOT NULL COMMENT '组界限',
                                  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
@@ -68,4 +69,13 @@ CREATE TABLE `field_group` (
                                `fieldId` bigint NOT NULL COMMENT '地块id',
                                `groupId` bigint NOT NULL COMMENT '分组id',
                                UNIQUE KEY `field_groupId_index` (`fieldId`,`groupId`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+
+CREATE TABLE `argument` (
+                            `id` bigint NOT NULL AUTO_INCREMENT COMMENT 'id',
+                            `water_and_fertilizer` int NOT NULL COMMENT '水肥比（a:1）',
+                            `water_consumption` double NOT NULL COMMENT '头\\尾纯水耗水量h\\s ',
+                            `current_speed` double NOT NULL COMMENT '流速L',
+                            PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;

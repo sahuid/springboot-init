@@ -1,6 +1,9 @@
 package com.sahuid.springbootinit.model.req.field;
 
+import com.sahuid.springbootinit.model.entity.Locational;
 import lombok.Data;
+
+import java.util.List;
 
 /**
  * @Author: wxb
@@ -25,7 +28,7 @@ public class AddFieldInfoRequest {
     /**
      * 地块的位置
      */
-    private String fieldRange;
+    private List<Locational> fieldRange;
 
     /**
      * 灌溉面积

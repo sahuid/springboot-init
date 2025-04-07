@@ -7,9 +7,10 @@
     <resultMap id="BaseResultMap" type="com.sahuid.springbootinit.model.entity.GroupManager">
             <id property="id" column="id" />
             <result property="groupName" column="groupName" />
+            <result property="groupRange" column="groupRange" />
     </resultMap>
 
     <sql id="Base_Column_List">
-        id,groupName
+        id,groupName,groupRange
     </sql>
 </mapper>

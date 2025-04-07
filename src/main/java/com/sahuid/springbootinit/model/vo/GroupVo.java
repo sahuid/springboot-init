@@ -33,4 +33,9 @@ public class GroupVo {
      * 位置信息
      */
     private String locationInfo;
+
+    /**
+     * 组范围
+     */
+    private String groupRange;
 }

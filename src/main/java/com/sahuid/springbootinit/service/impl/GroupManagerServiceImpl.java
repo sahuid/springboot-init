@@ -2,6 +2,7 @@ package com.sahuid.springbootinit.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -10,6 +11,7 @@ import com.sahuid.springbootinit.exception.DataBaseAbsentException;
 import com.sahuid.springbootinit.exception.RequestParamException;
 import com.sahuid.springbootinit.model.entity.Field;
 import com.sahuid.springbootinit.model.entity.GroupManager;
+import com.sahuid.springbootinit.model.entity.Locational;
 import com.sahuid.springbootinit.model.req.group.AddGroupInfoRequest;
 import com.sahuid.springbootinit.model.req.group.QueryGroupByPageRequest;
 import com.sahuid.springbootinit.model.req.group.UpdateGroupByIdRequest;
@@ -45,11 +47,14 @@ public class GroupManagerServiceImpl extends ServiceImpl<GroupManagerMapper, Gro
     @Override
     public void addGroupInfo(AddGroupInfoRequest addGroupInfoRequest) {
         String groupName = addGroupInfoRequest.getGroupName();
-        if (StrUtil.isBlank(groupName)) {
+        List<Locational> groupRange = addGroupInfoRequest.getGroupRange();
+        if (StrUtil.isBlank(groupName) || groupRange == null) {
             throw new RequestParamException("请求参数错误");
         }
         GroupManager groupManager = new GroupManager();
         groupManager.setGroupName(groupName);
+        String jsonStr = JSONUtil.toJsonStr(groupRange);
+        groupManager.setGroupRange(jsonStr);
         boolean save = this.save(groupManager);
         if (!save) {
             throw new RuntimeException("保存失败");
@@ -95,6 +100,7 @@ public class GroupManagerServiceImpl extends ServiceImpl<GroupManagerMapper, Gro
     @Override
     public void updateGroupById(UpdateGroupByIdRequest updateGroupByIdRequest) {
         Long userId = updateGroupByIdRequest.getId();
+        List<Locational> groupRange = updateGroupByIdRequest.getGroupRange();
         if (userId == null) {
             throw new RequestParamException("请求参数错误");
         }
@@ -103,6 +109,10 @@ public class GroupManagerServiceImpl extends ServiceImpl<GroupManagerMapper, Gro
             throw new DataBaseAbsentException("数据不存在");
         }
         BeanUtil.copyProperties(updateGroupByIdRequest, groupManager, false);
+        if (groupRange != null) {
+            String jsonStr = JSONUtil.toJsonStr(groupManager);
+            groupManager.setGroupRange(jsonStr);
+        }
         boolean update = this.updateById(groupManager);
         if (!update) {
             throw new RuntimeException("修改失败");

@@ -1,40 +1,39 @@
 package com.sahuid.springbootinit.model.entity;
 
-import com.alibaba.excel.annotation.ExcelProperty;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import java.io.Serializable;
-
-import com.sahuid.springbootinit.config.JsonConverter;
 import lombok.Data;
 
 /**
  * 
- * @TableName group_manager
+ * @TableName argument
  */
-@TableName(value ="group_manager")
+@TableName(value ="argument")
 @Data
-public class GroupManager implements Serializable {
+public class Argument implements Serializable {
     /**
-     * 主键id
+     * id
      */
     @TableId(type = IdType.AUTO)
-    @ExcelProperty("ID")
     private Long id;
 
     /**
-     * 组名称
+     * 水肥比（a:1）
      */
-    @ExcelProperty("分组名称")
-    private String groupName;
+    private Integer water_and_fertilizer;
 
     /**
-     * 组界限
+     * 头\尾纯水耗水量h\s 
      */
-    @ExcelProperty(value = "位置信息", converter = JsonConverter.class)
-    private String groupRange;
+    private Double water_consumption;
+
+    /**
+     * 流速L
+     */
+    private Double current_speed;
 
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;

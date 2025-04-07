@@ -1,6 +1,7 @@
 package com.sahuid.springbootinit.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -9,6 +10,7 @@ import com.sahuid.springbootinit.exception.RequestParamException;
 import com.sahuid.springbootinit.model.entity.Field;
 import com.sahuid.springbootinit.model.entity.FieldGroup;
 import com.sahuid.springbootinit.model.entity.GroupManager;
+import com.sahuid.springbootinit.model.entity.Locational;
 import com.sahuid.springbootinit.model.req.field.AddFieldInfoRequest;
 import com.sahuid.springbootinit.model.req.field.AddFieldToGroupRequest;
 import com.sahuid.springbootinit.model.req.field.QueryFieldByPageRequest;
@@ -46,16 +48,18 @@ public class FieldServiceImpl extends ServiceImpl<FieldMapper, Field>
     @Override
     public void addFieldInfo(AddFieldInfoRequest addFieldInfoRequest) {
         String fieldId = addFieldInfoRequest.getFieldId();
-        String fieldRange = addFieldInfoRequest.getFieldRange();
+        List<Locational> fieldRange = addFieldInfoRequest.getFieldRange();
         Double fieldSize = addFieldInfoRequest.getFieldSize();
-        if (StringUtils.isAnyBlank(fieldId, fieldRange)) {
+        if (StringUtils.isAnyBlank(fieldId)) {
             throw new RequestParamException("请求参数缺失");
         }
-        if (fieldSize == null) {
+        if (fieldSize == null || fieldRange == null) {
             throw new RequestParamException("请求参数缺失");
         }
         Field field = new Field();
         BeanUtil.copyProperties(addFieldInfoRequest, field, false);
+        String jsonStrRange = JSONUtil.toJsonStr(fieldRange);
+        field.setFieldRange(jsonStrRange);
         boolean save = this.save(field);
         if (!save) {
             throw new RuntimeException("保存失败");
@@ -93,6 +97,7 @@ public class FieldServiceImpl extends ServiceImpl<FieldMapper, Field>
     @Override
     public void updateFieldById(UpdateFieldByIdRequest updateFieldByIdRequest) {
         Long fieldId = updateFieldByIdRequest.getId();
+        List<Locational> fieldRange = updateFieldByIdRequest.getFieldRange();
         if (fieldId == null) {
             throw new RequestParamException("请求参数错误");
         }
@@ -101,6 +106,10 @@ public class FieldServiceImpl extends ServiceImpl<FieldMapper, Field>
             throw new DataBaseAbsentException("数据不存在");
         }
         BeanUtil.copyProperties(updateFieldByIdRequest, field, false);
+        if (fieldRange != null) {
+            String jsonStr = JSONUtil.toJsonStr(fieldRange);
+            field.setFieldRange(jsonStr);
+        }
         boolean update = this.updateById(field);
         if (!update) {
             throw new RuntimeException("数据修改失败");

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sahuid.springbootinit.mapper.ArgumentMapper">
+
+    <resultMap id="BaseResultMap" type="com.sahuid.springbootinit.model.entity.Argument">
+            <id property="id" column="id" />
+            <result property="water_and_fertilizer" column="water_and_fertilizer" />
+            <result property="water_consumption" column="water_consumption" />
+            <result property="current_speed" column="current speed" />
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,water_and_fertilizer,water_consumption,current_speed
+    </sql>
+</mapper>

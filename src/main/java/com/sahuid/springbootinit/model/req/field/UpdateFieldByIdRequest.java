@@ -2,7 +2,10 @@ package com.sahuid.springbootinit.model.req.field;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
+import com.sahuid.springbootinit.model.entity.Locational;
 import lombok.Data;
+
+import java.util.List;
 
 /**
  * @Author: wxb
@@ -30,5 +33,5 @@ public class UpdateFieldByIdRequest {
     /**
      * 地理位置
      */
-    private String fieldRange;
+    private List<Locational> fieldRange;
 }
