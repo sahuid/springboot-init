@@ -8,6 +8,7 @@ import com.sahuid.springbootinit.service.ArgumentService;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * @Author: wxb
@@ -34,5 +35,11 @@ public class ArgumentController {
         Page<Argument> page = new Page<>(currentPage, pageSize);
         argumentService.page(page);
         return R.ok(page);
+    }
+
+    @GetMapping("/list")
+    public R<List<Argument>> queryList() {
+        List<Argument> list = argumentService.list();
+        return R.ok(list);
     }
 }

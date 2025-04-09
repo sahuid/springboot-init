@@ -75,7 +75,9 @@ CREATE TABLE `field_group` (
 CREATE TABLE `argument` (
                             `id` bigint NOT NULL AUTO_INCREMENT COMMENT 'id',
                             `water_and_fertilizer` int NOT NULL COMMENT '水肥比（a:1）',
-                            `water_consumption` double NOT NULL COMMENT '头\\尾纯水耗水量h\\s ',
+                            `head_water_consumption` double NOT NULL COMMENT '头纯水耗水量h\\s ',
                             `current_speed` double NOT NULL COMMENT '流速L',
+                            `tail_water_consumption` double NOT NULL COMMENT '尾纯水耗水量h\\s ',
+                            `fieldId` bigint NOT NULL COMMENT '地块编号',
                             PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;

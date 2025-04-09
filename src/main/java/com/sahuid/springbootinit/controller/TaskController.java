@@ -12,6 +12,7 @@ import com.sahuid.springbootinit.service.TaskService;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * @Author: wxb
@@ -47,5 +48,11 @@ public class TaskController {
     public R<Void> deleteFieldById(Long taskId) {
         taskService.deleteTaskById(taskId);
         return R.ok("删除成功");
+    }
+
+    @GetMapping("/list")
+    public R<List<Task>> queryList() {
+        List<Task> list = taskService.list();
+        return R.ok(list);
     }
 }

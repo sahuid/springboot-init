@@ -7,11 +7,13 @@
     <resultMap id="BaseResultMap" type="com.sahuid.springbootinit.model.entity.Argument">
             <id property="id" column="id" />
             <result property="water_and_fertilizer" column="water_and_fertilizer" />
-            <result property="water_consumption" column="water_consumption" />
-            <result property="current_speed" column="current speed" />
+            <result property="head_water_consumption" column="head_water_consumption" />
+            <result property="current_speed" column="current_speed" />
+            <result property="tail_water_consumption" column="tail_water_consumption" />
+            <result property="fieldId" column="fieldId" />
     </resultMap>
 
     <sql id="Base_Column_List">
-        id,water_and_fertilizer,water_consumption,current_speed
+        id,water_and_fertilizer,head_water_consumption,current_speed,tail_water_consumption,fieldId
     </sql>
 </mapper>

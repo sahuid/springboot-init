@@ -26,14 +26,24 @@ public class Argument implements Serializable {
     private Integer water_and_fertilizer;
 
     /**
-     * 头\尾纯水耗水量h\s 
+     * 头纯水耗水量h\s 
      */
-    private Double water_consumption;
+    private Double head_water_consumption;
 
     /**
      * 流速L
      */
     private Double current_speed;
+
+    /**
+     * 尾纯水耗水量h\s 
+     */
+    private Double tail_water_consumption;
+
+    /**
+     * 地块编号
+     */
+    private Long fieldId;
 
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;

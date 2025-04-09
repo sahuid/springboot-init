@@ -1,5 +1,6 @@
 package com.sahuid.springbootinit.controller;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.sahuid.springbootinit.common.R;
 import com.sahuid.springbootinit.model.entity.Field;
@@ -123,5 +124,14 @@ public class FieldController {
 
         // 创建模板并写入响应流
         ExcelUtil.createTemplate(response.getOutputStream(), Field.class);
+    }
+
+    @GetMapping("/getUnitByField")
+    public R<List<Field>> getUnitByField(Long id){
+        Field field = fieldService.getById(id);
+        LambdaQueryWrapper<Field> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(Field::getFieldParent, field.getId());
+        List<Field> fieldList = fieldService.list(wrapper);
+        return R.ok(fieldList);
     }
 }
