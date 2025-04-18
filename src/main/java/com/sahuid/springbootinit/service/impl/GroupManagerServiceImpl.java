@@ -93,6 +93,7 @@ public class GroupManagerServiceImpl extends ServiceImpl<GroupManagerMapper, Gro
             size.updateAndGet(v -> v + fieldSize);
         });
         stringBuilder.append(" ").append("总面积是：").append(size);
+        groupVo.setGroupSize(size.get());
         groupVo.setLocationInfo(stringBuilder.toString());
         return groupVo;
     }

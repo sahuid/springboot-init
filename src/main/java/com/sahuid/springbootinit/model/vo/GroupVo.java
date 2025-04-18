@@ -38,4 +38,9 @@ public class GroupVo {
      * 组范围
      */
     private String groupRange;
+
+    /**
+     * 组面积
+     */
+    private Double groupSize;
 }

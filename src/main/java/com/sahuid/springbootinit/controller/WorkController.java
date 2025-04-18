@@ -1,5 +1,7 @@
 package com.sahuid.springbootinit.controller;
 
+import cn.hutool.core.lang.TypeReference;
+import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.sahuid.springbootinit.common.R;
 import com.sahuid.springbootinit.job.Worker;
@@ -54,9 +56,11 @@ public class WorkController {
         // 寻找阀门
         Task task = taskService.getById(taskId);
 
-        String fieldUnitId = task.getFieldUnitId();
+        String jsonUnitList = task.getFieldUnitId();
+        List<String> fieldUnitIds = JSONUtil.toBean(jsonUnitList, new TypeReference<>() {
+        }, false);
         LambdaQueryWrapper<Device> deviceLambdaQueryWrapper = new LambdaQueryWrapper<>();
-        deviceLambdaQueryWrapper.eq(Device::getDeviceManagerNumber, fieldUnitId);
+        deviceLambdaQueryWrapper.in(Device::getDeviceManagerNumber, fieldUnitIds);
         List<Device> tapsList = deviceService.list(deviceLambdaQueryWrapper);
 
 
@@ -68,15 +72,12 @@ public class WorkController {
         Device filter = otherDevice.stream().filter(device -> device.getDeviceType() == 2).findFirst().orElse(null);
 
         // 计算面积
-        Double sum = 0d;
-//        for (Field field1 : fieldUnitList) {
-//            sum += field1.getFieldSize();
-//        }
         LambdaQueryWrapper<Field> fieldLambdaQueryWrapper = new LambdaQueryWrapper<>();
-        fieldLambdaQueryWrapper.eq(Field::getFieldUnitId, fieldUnitId);
-        Field field1 = fieldService.getOne(fieldLambdaQueryWrapper);
-        if (field1 != null) {
-            sum = field1.getFieldSize();
+        fieldLambdaQueryWrapper.in(Field::getFieldUnitId, fieldUnitIds);
+        List<Field> fieldList = fieldService.list(fieldLambdaQueryWrapper);
+        Double sum = 0d;
+        for (Field field1 : fieldList) {
+            sum += field1.getFieldSize();
         }
 
 

@@ -8,9 +8,10 @@
             <id property="id" column="id" />
             <result property="groupName" column="groupName" />
             <result property="groupRange" column="groupRange" />
+            <result property="groupSize" column="groupSize" />
     </resultMap>
 
     <sql id="Base_Column_List">
-        id,groupName,groupRange
+        id,groupName,groupRange,groupSize
     </sql>
 </mapper>

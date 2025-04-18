@@ -2,6 +2,7 @@ package com.sahuid.springbootinit.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.sahuid.springbootinit.exception.DataBaseAbsentException;
@@ -18,6 +19,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.List;
 
 /**
 * @author wxb
@@ -36,12 +38,14 @@ public class TaskServiceImpl extends ServiceImpl<TaskMapper, Task>
         String fieldId = addTaskInfoRequest.getFieldId();
         String taskId = addTaskInfoRequest.getTaskId();
         Double fertilizerP = addTaskInfoRequest.getFertilizerP();
-        String fieldUnitId = addTaskInfoRequest.getFieldUnitId();
+        List<String> fieldUnitIds = addTaskInfoRequest.getFieldUnitIds();
         Date startTime = addTaskInfoRequest.getStartTime();
-        if (StringUtils.isAnyBlank(fieldId, taskId, fieldUnitId)) {
+        if (StringUtils.isAnyBlank(fieldId, taskId)) {
             throw new RequestParamException("请求参数缺失");
         }
-
+        if (fieldUnitIds.isEmpty()) {
+            throw new RequestParamException("请求参数缺失");
+        }
         if (fertilizerK == null || water == null || fertilizerN == null || fertilizerP == null) {
             throw new RequestParamException("需求量参数缺失");
         }
@@ -51,6 +55,8 @@ public class TaskServiceImpl extends ServiceImpl<TaskMapper, Task>
         }
         Task task = new Task();
         BeanUtil.copyProperties(addTaskInfoRequest, task, false);
+        String unitJson = JSONUtil.toJsonStr(fieldUnitIds);
+        task.setFieldUnitId(unitJson);
         boolean save = this.save(task);
         if (!save) {
             throw new RuntimeException("保存失败");

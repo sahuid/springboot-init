@@ -36,6 +36,11 @@ public class GroupManager implements Serializable {
     @ExcelProperty(value = "位置信息", converter = JsonConverter.class)
     private String groupRange;
 
+    /**
+     * 组面积大小
+     */
+    private Double groupSize;
+
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;
 }

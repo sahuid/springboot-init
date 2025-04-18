@@ -61,8 +61,9 @@ CREATE TABLE `group_manager` (
                                  `id` bigint NOT NULL AUTO_INCREMENT COMMENT '主键id',
                                  `groupName` varchar(255) NOT NULL COMMENT '组名称',
                                  `groupRange` varchar(1024) NOT NULL COMMENT '组界限',
+                                 `groupSize` double NOT NULL DEFAULT '0' COMMENT '组面积',
                                  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 
 CREATE TABLE `field_group` (

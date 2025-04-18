@@ -4,6 +4,7 @@ import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * @Author: wxb
@@ -21,7 +22,7 @@ public class AddTaskInfoRequest {
     /**
      * 灌溉单元编号
      */
-    private String fieldUnitId;
+    private List<String> fieldUnitIds;
 
     /**
      * 灌溉任务编号

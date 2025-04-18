@@ -34,4 +34,9 @@ public class UpdateFieldByIdRequest {
      * 地理位置
      */
     private List<Locational> fieldRange;
+
+    /**
+     * 灌溉面积
+     */
+    private Double fieldSize;
 }
