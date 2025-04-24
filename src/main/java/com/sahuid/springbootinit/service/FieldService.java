@@ -8,7 +8,10 @@ import com.sahuid.springbootinit.model.req.field.AddFieldToGroupRequest;
 import com.sahuid.springbootinit.model.req.field.QueryFieldByPageRequest;
 import com.sahuid.springbootinit.model.req.field.UpdateFieldByIdRequest;
 import com.sahuid.springbootinit.model.vo.FieldVO;
+import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.ServletOutputStream;
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -67,4 +70,16 @@ public interface FieldService extends IService<Field> {
      */
     List<Field> queryFieldUnitList();
 
+    /**
+     * 生成 excel 模板
+     * @param outputStream
+     * @throws IOException
+     */
+    void generateTemplate(ServletOutputStream outputStream) throws IOException;
+
+    /**
+     * excel 导入
+     * @param file
+     */
+    void importData(MultipartFile file) throws IOException;
 }

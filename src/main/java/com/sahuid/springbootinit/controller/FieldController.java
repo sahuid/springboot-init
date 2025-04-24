@@ -10,13 +10,14 @@ import com.sahuid.springbootinit.model.req.field.QueryFieldByPageRequest;
 import com.sahuid.springbootinit.model.req.field.UpdateFieldByIdRequest;
 import com.sahuid.springbootinit.model.vo.FieldVO;
 import com.sahuid.springbootinit.service.FieldService;
-import com.sahuid.springbootinit.util.ExcelUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.net.URLEncoder;
 import java.util.List;
 
 /**
@@ -26,6 +27,7 @@ import java.util.List;
  **/
 @RestController
 @RequestMapping("/field")
+@Slf4j
 public class FieldController {
 
     @Resource
@@ -96,19 +98,15 @@ public class FieldController {
     @PostMapping("/import")
     public R<Void> importField(@RequestParam("file") MultipartFile file) throws IOException {
         if (file.isEmpty()) {
-            return R.fail(400, "上传文件不能为空");
+            return R.fail(400,"文件不能为空");
         }
-
-        // 通过ExcelUtil解析Excel文件
-        List<Field> fieldList = ExcelUtil.parseExcel(file.getInputStream(), Field.class);
-
-        // 批量保存数据
-        boolean result = fieldService.saveBatch(fieldList);
-
-        if (result) {
-            return R.ok("导入成功");
-        } else {
-            return R.fail(400, "导入失败");
+        try {
+            fieldService.importData(file);
+            return R.ok("数据导入成功");
+        } catch (IOException e) {
+            return R.fail(400, "文件读取失败：" + e.getMessage());
+        } catch (IllegalArgumentException e) {
+            return R.fail(400, e.getMessage());
         }
     }
 
@@ -116,14 +114,19 @@ public class FieldController {
      * 下载地块导入模板
      */
     @GetMapping("/template/download")
-    public void downloadTemplate(HttpServletResponse response) throws IOException {
-        // 设置响应头
-        response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
-        response.setCharacterEncoding("utf-8");
-        response.setHeader("Content-disposition", "attachment;filename=field_template.xlsx");
+    public void downloadTemplate(HttpServletResponse response){
+        try {
+            // 设置响应头
+            response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+            String fileName = URLEncoder.encode("地块信息模板.xlsx", "UTF-8");
+            response.setHeader("Content-Disposition", "attachment; filename=\"" + fileName + "\"");
 
-        // 创建模板并写入响应流
-        ExcelUtil.createTemplate(response.getOutputStream(), Field.class);
+            // 生成模板并写入响应流
+            fieldService.generateTemplate(response.getOutputStream());
+        } catch (IOException e) {
+            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            log.error("模板下载失败", e);
+        }
     }
 
     @GetMapping("/getUnitByField")

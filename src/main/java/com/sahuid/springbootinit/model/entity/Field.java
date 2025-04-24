@@ -1,6 +1,5 @@
 package com.sahuid.springbootinit.model.entity;
 
-import com.alibaba.excel.annotation.ExcelProperty;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
@@ -19,7 +18,6 @@ public class Field implements Serializable {
      * 主键id
      */
     @TableId(type = IdType.AUTO)
-    @ExcelProperty("ID")
     private Long id;
 
     /**
@@ -56,6 +54,8 @@ public class Field implements Serializable {
      * 组id
      */
     private Long groupId;
+
+
 
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;
