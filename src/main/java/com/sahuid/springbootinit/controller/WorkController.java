@@ -92,7 +92,6 @@ public class WorkController {
         Long groupId = workRequest.getGroupId();
         Long taskId = workRequest.getTaskId();
         Long argumentId = workRequest.getArgumentId();
-        List<Integer> sortType = workRequest.getSortType();
 
         Field field = fieldService.getById(fieldId);
         GroupManager groupManager = groupManagerService.getById(groupId);
@@ -124,6 +123,40 @@ public class WorkController {
         }
         Argument argument = argumentService.getById(argumentId);
         String result = worker.workMix(field, groupManager, tapsList, pump, filter, sum, task, argument);
+        return R.ok(result, "返回成功");
+    }
+
+    @GetMapping("/work/diff")
+    public R<String> Test(WorkRequest workRequest){
+        Long fieldId = workRequest.getFieldId();
+        Long groupId = workRequest.getGroupId();
+        Long taskId = workRequest.getTaskId();
+        Long argumentId = workRequest.getArgumentId();
+        List<Integer> sortType = workRequest.getSortType();
+        Field field = fieldService.getById(fieldId);
+        Task task = taskService.getById(taskId);
+        GroupManager groupManager = groupManagerService.getById(groupId);
+        // 获取灌溉单元
+        String fieldUnitJson = task.getFieldUnitId();
+        List<String> fieldUnitIds = JSONUtil.toBean(fieldUnitJson, new TypeReference<>() {
+        }, false);
+        LambdaQueryWrapper<Field> fieldLambdaQueryWrapper = new LambdaQueryWrapper<>();
+        fieldLambdaQueryWrapper.in(Field::getFieldUnitId, fieldUnitIds);
+        List<Field> fieldUnitList = fieldService.list(fieldLambdaQueryWrapper);
+        // 寻找阀门
+        LambdaQueryWrapper<Device> deviceLambdaQueryWrapper = new LambdaQueryWrapper<>();
+        deviceLambdaQueryWrapper.in(Device::getDeviceManagerNumber, fieldUnitIds);
+        List<Device> tapsList = deviceService.list(deviceLambdaQueryWrapper);
+
+        // 寻找水泵和施肥机
+        deviceLambdaQueryWrapper.clear();
+        deviceLambdaQueryWrapper.eq(Device::getDeviceManagerNumber, field.getFieldId());
+        List<Device> otherDevice = deviceService.list(deviceLambdaQueryWrapper);
+        Device pump = otherDevice.stream().filter(device -> device.getDeviceType() == 1).findFirst().orElse(null);
+        Device filter = otherDevice.stream().filter(device -> device.getDeviceType() == 2).findFirst().orElse(null);
+
+        Argument argument = argumentService.getById(argumentId);
+        String result = worker.wordDiff(tapsList, pump, filter, fieldUnitList, argument, task, field, groupManager, sortType);
         return R.ok(result, "返回成功");
     }
 }
