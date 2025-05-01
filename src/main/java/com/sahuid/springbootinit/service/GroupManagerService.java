@@ -7,7 +7,10 @@ import com.sahuid.springbootinit.model.req.group.AddGroupInfoRequest;
 import com.sahuid.springbootinit.model.req.group.QueryGroupByPageRequest;
 import com.sahuid.springbootinit.model.req.group.UpdateGroupByIdRequest;
 import com.sahuid.springbootinit.model.vo.GroupVo;
+import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.ServletOutputStream;
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -47,4 +50,8 @@ public interface GroupManagerService extends IService<GroupManager> {
      * @return
      */
     List<GroupManager> queryGroupList();
+
+    void generateTemplate(ServletOutputStream outputStream) throws IOException;
+
+    void processImport(MultipartFile file) throws IOException;
 }

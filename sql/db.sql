@@ -37,11 +37,11 @@ CREATE TABLE `field` (
                          `fieldName` varchar(255) NOT NULL COMMENT '地块名称',
                          `fieldParent` bigint DEFAULT NULL COMMENT '地块id（用于区分基本灌溉单元）',
                          `fieldUnitId` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '灌溉单元编号',
-                         `fieldSize` double NOT NULL COMMENT '灌溉面积',
-                         `fieldRange` varchar(1024) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '四个点经纬度信息（json数组）',
+                         `fieldSize` double DEFAULT NULL COMMENT '灌溉面积',
+                         `fieldRange` varchar(1024) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '四个点经纬度信息（json数组）',
                          `groupId` bigint DEFAULT NULL COMMENT '组id',
                          PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 CREATE TABLE `task` (
                         `id` bigint NOT NULL AUTO_INCREMENT COMMENT '主键 id',
