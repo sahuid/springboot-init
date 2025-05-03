@@ -13,10 +13,10 @@ public class Locational {
     /**
      * 纬度
      */
-    private Double latitude;
+    private Double lat;
 
     /**
      * 经度
      */
-    private Double longitude;
+    private Double lon;
 }

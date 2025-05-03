@@ -52,10 +52,10 @@ public class WebSocketService {
         log.info("websocket 接收到了消息， 消息内容是：{}", message);
 
         try {
-            List<Task> tasks = TaskConverter.convertToEntities(message);
+            Task tasks = TaskConverter.convertToEntities(message);
 
             // 批量保存
-            taskService.saveBatch(tasks);
+            taskService.save(tasks);
             session.getBasicRemote().sendText("我接收到了消息，任务已保存");
         } catch (Exception e) {
             log.error("保存失败");
