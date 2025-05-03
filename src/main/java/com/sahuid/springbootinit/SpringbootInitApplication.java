@@ -1,5 +1,6 @@
 package com.sahuid.springbootinit;
 
+import com.sahuid.springbootinit.ws.AcceptWebSocketService;
 import com.sahuid.springbootinit.ws.WebSocketService;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
@@ -14,6 +15,7 @@ public class SpringbootInitApplication {
         ConfigurableApplicationContext applicationContext = SpringApplication.run(SpringbootInitApplication.class, args);
         // 给 websocket 容器注入 applicationContext
         WebSocketService.setApplicationContext(applicationContext);
+        AcceptWebSocketService.setApplicationContext(applicationContext);
     }
 
 }

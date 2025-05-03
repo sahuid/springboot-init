@@ -42,4 +42,16 @@ public class ArgumentController {
         List<Argument> list = argumentService.list();
         return R.ok(list);
     }
+
+    @PostMapping("/delete")
+    public R<Void> deleteById(Long id) {
+        boolean b = argumentService.removeById(id);
+        return R.ok("删除成功");
+    }
+
+    @PostMapping("/update")
+    public R<Void> updateById(@RequestBody Argument argument) {
+        boolean update = argumentService.updateById(argument);
+        return R.ok("修改成功");
+    }
 }
