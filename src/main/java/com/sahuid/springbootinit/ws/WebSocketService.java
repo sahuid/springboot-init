@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import javax.websocket.*;
 import javax.websocket.server.ServerEndpoint;
 import java.io.IOException;
+import java.text.ParseException;
 import java.util.List;
 
 /**
@@ -27,6 +28,8 @@ public class WebSocketService {
     private static ApplicationContext applicationContext;
 
     private TaskService taskService;
+
+    private TaskConverter taskConverter;
 
     /**
      * 通过启动类设置 spring 的上下文
@@ -48,18 +51,16 @@ public class WebSocketService {
     }
 
     @OnMessage
-    public void onMessage(Session session, String message) {
+    public void onMessage(Session session, String message) throws IOException, ParseException {
         log.info("websocket 接收到了消息， 消息内容是：{}", message);
 
-        try {
-            Task tasks = TaskConverter.convertToEntities(message);
 
             // 批量保存
-            taskService.save(tasks);
+            Task tasks = taskConverter.convertToEntities(message);
+
+            //taskService.save(tasks);
             session.getBasicRemote().sendText("我接收到了消息，任务已保存");
-        } catch (Exception e) {
-            log.error("保存失败");
-        }
+
 
 
     }
@@ -76,6 +77,15 @@ public class WebSocketService {
         synchronized (WebSocketService.class) {
             if (taskService == null) {
                 taskService = applicationContext.getBean(TaskService.class);
+            }
+        }
+
+        if(taskConverter != null) {
+            return;
+        }
+        synchronized (WebSocketService.class) {
+            if (taskConverter == null) {
+                taskConverter = applicationContext.getBean(TaskConverter.class);
             }
         }
     }
