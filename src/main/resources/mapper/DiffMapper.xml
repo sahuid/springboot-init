@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sahuid.springbootinit.mapper.DiffMapper">
+
+    <resultMap id="BaseResultMap" type="com.sahuid.springbootinit.model.entity.Diff">
+            <result property="taskId" column="taskId" />
+            <result property="fieldUnitId" column="fieldUnitId" />
+            <result property="water" column="water" />
+            <result property="fertilizerN" column="fertilizerN" />
+            <result property="fertilizerP" column="fertilizerP" />
+            <result property="fertilizerK" column="fertilizerK" />
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        taskId,fieldUnitId,water,fertilizerN,fertilizerP,fertilizerK
+    </sql>
+</mapper>

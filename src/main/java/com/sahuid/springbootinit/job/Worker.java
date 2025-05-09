@@ -7,8 +7,10 @@ import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.sahuid.springbootinit.model.entity.*;
+import com.sahuid.springbootinit.service.DiffService;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.Resource;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -21,6 +23,7 @@ import java.util.stream.Collectors;
 @Component
 public class Worker {
 
+
     Map<Integer, String> sortTypeMap = new HashMap<>();
 
     {
@@ -28,6 +31,9 @@ public class Worker {
         sortTypeMap.put(2, "磷");
         sortTypeMap.put(3, "钾");
     }
+
+    @Resource
+    private DiffService diffService;
 
     /**
      * 整体顺序肥
@@ -768,18 +774,38 @@ public class Worker {
         double maxWaterCompensationNum = 0d;
         // 灌溉单元计算
         for (Field field1 : fieldUnitList) {
+            String fieldUnitId = field1.getFieldUnitId();
+            LambdaQueryWrapper<Diff> wrapper = new LambdaQueryWrapper<>();
+            wrapper.eq(Diff::getTaskId, task.getId());
+            wrapper.eq(Diff::getFieldUnitId, fieldUnitId);
+            Diff diff = diffService.getOne(wrapper);
+            if (diff == null) {
+                continue;
+            }
+            Double needK = diff.getFertilizerK();
+            Double needP = diff.getFertilizerP();
+            Double needN = diff.getFertilizerN();
+            Double needWater = diff.getWater();
+            fertilizerN += needK;
+            fertilizerK += needP;
+            fertilizerP += needP;
+            waterNum += needWater;
+            task.setFertilizerK(fertilizerK);
+            task.setFertilizerN(fertilizerN);
+            task.setFertilizerP(fertilizerP);
+            task.setWater(waterNum);
             Double fieldSize = field1.getFieldSize();
             // 需要钾肥量
-            double kNum = fertilizerK / fieldSize;
+            double kNum = needK / fieldSize;
             // 需要氮肥量
-            double nNum = fertilizerN / fieldSize;
+            double nNum = needN / fieldSize;
             // 需要磷肥量
-            double pNum = fertilizerP / fieldSize;
+            double pNum = needP / fieldSize;
             maxNNum = Math.max(maxNNum, nNum);
             maxKNum = Math.max(maxKNum, kNum);
             maxPNum = Math.max(maxPNum, pNum);
             // 单位纯水补偿量
-            double waterCompensationNum = waterNum
+            double waterCompensationNum = needWater
                     / ((fieldSize - headWaterConsumption - tailWaterConsumption - kNum - nNum - pNum) * waterAndFertilizer);
             maxWaterCompensationNum = Math.max(maxWaterCompensationNum, waterCompensationNum);
             // 填充map参数
@@ -798,13 +824,17 @@ public class Worker {
         double maxPTime = (maxPNum * waterAndFertilizer) / sizeSpeed;
         // 除需肥最大单元外的 扣除时间（每个基本灌溉单元）
         for (Field field1 : fieldUnitList) {
-            // 氮肥
-            double nDeductionTime = (maxNTime * (maxNNum - fertilizerN)) / maxNNum;
-            // 钾肥
-            double kDeductionTime = (maxKTime * (maxKNum - fertilizerN)) / maxKNum;
-            // 磷肥
-            double pDeductionTime = (maxPTime * (maxPNum - fertilizerN)) / maxPNum;
             DiffArgument diffArgument = fieldDiffArgumentMap.get(field1);
+            double nNum = diffArgument.getNNum();
+            double kNum = diffArgument.getKNum();
+            double pNum = diffArgument.getPNum();
+            // 氮肥
+            double nDeductionTime = (maxNTime * (maxNNum - nNum)) / maxNNum;
+            // 钾肥
+            double kDeductionTime = (maxKTime * (maxKNum - kNum)) / maxKNum;
+            // 磷肥
+            double pDeductionTime = (maxPTime * (maxPNum - pNum)) / maxPNum;
+
             diffArgument.setNDeductionTime(nDeductionTime);
             diffArgument.setKDeductionTime(kDeductionTime);
             diffArgument.setPDeductionTime(pDeductionTime);
@@ -815,6 +845,7 @@ public class Worker {
         double compensationTime = maxWaterCompensationNum / currentSpeed;
         // 纯水补偿的扣除时间（每个基本灌溉单元）
         for (Field field1 : fieldUnitList) {
+
             DiffArgument diffArgument = fieldDiffArgumentMap.get(field1);
             // 获取单元单位纯水补偿量
             double waterCompensationNum = diffArgument.getWaterCompensationNum();
@@ -1002,7 +1033,8 @@ public class Worker {
                 if (fertilizerApplicator != null) {
                     jsonObject.set("controled_Object_ID", fertilizerApplicator.getDeviceId());
                 }
-                jsonObject.set("control_Time", baseTime);
+                String format = sdf.format(baseTime);
+                jsonObject.set("control_Time", format);
                 jsonObject.set("control_Cmd", 1);
             }
             count++;
@@ -1137,7 +1169,8 @@ public class Worker {
                 if (fertilizerApplicator != null) {
                     jsonObject.set("“controled_Object_ID", fertilizerApplicator.getDeviceId());
                 }
-                jsonObject.set("control_Time", baseTime);
+                String format = sdf.format(baseTime);
+                jsonObject.set("control_Time", format);
                 jsonObject.set("control_Cmd", 0);
             }
         }
@@ -1224,17 +1257,33 @@ public class Worker {
         // 灌溉单元计算
         for (Field field1 : fieldUnitList) {
             Double fieldSize = field1.getFieldSize();
+            Diff diff = getDiff(field1, task);
+            if (diff == null) {
+                continue;
+            }
+            Double needK = diff.getFertilizerK();
+            Double needP = diff.getFertilizerP();
+            Double needN = diff.getFertilizerN();
+            Double needWater = diff.getWater();
+            fertilizerN += needK;
+            fertilizerK += needP;
+            fertilizerP += needP;
+            waterNum += needWater;
+            task.setFertilizerK(fertilizerK);
+            task.setFertilizerN(fertilizerN);
+            task.setFertilizerP(fertilizerP);
+            task.setWater(waterNum);
             // 需要钾肥量
-            double kNum = fertilizerK / fieldSize;
+            double kNum = needK / fieldSize;
             // 需要氮肥量
-            double nNum = fertilizerN / fieldSize;
+            double nNum = needN / fieldSize;
             // 需要磷肥量
-            double pNum = fertilizerP / fieldSize;
+            double pNum = needP / fieldSize;
             maxNNum = Math.max(maxNNum, nNum);
             maxKNum = Math.max(maxKNum, kNum);
             maxPNum = Math.max(maxPNum, pNum);
             // 单位纯水补偿量
-            double waterCompensationNum = waterNum
+            double waterCompensationNum = needWater
                     / ((fieldSize - headWaterConsumption - tailWaterConsumption - kNum - nNum - pNum) * waterAndFertilizer);
             maxWaterCompensationNum = Math.max(maxWaterCompensationNum, waterCompensationNum);
             // 填充map参数
@@ -1253,13 +1302,16 @@ public class Worker {
         double maxPTime = (maxPNum * waterAndFertilizer) / sizeSpeed;
         // 除需肥最大单元外的 扣除时间（每个基本灌溉单元）
         for (Field field1 : fieldUnitList) {
-            // 氮肥
-            double nDeductionTime = (maxNTime * (maxNNum - fertilizerN)) / maxNNum;
-            // 钾肥
-            double kDeductionTime = (maxKTime * (maxKNum - fertilizerN)) / maxKNum;
-            // 磷肥
-            double pDeductionTime = (maxPTime * (maxPNum - fertilizerN)) / maxPNum;
             DiffArgument diffArgument = fieldDiffArgumentMap.get(field1);
+            double pNum = diffArgument.getPNum();
+            double nNum = diffArgument.getNNum();
+            double kNum = diffArgument.getKNum();
+            // 氮肥
+            double nDeductionTime = (maxNTime * (maxNNum - nNum)) / maxNNum;
+            // 钾肥
+            double kDeductionTime = (maxKTime * (maxKNum - kNum)) / maxKNum;
+            // 磷肥
+            double pDeductionTime = (maxPTime * (maxPNum - pNum)) / maxPNum;
             diffArgument.setNDeductionTime(nDeductionTime);
             diffArgument.setKDeductionTime(kDeductionTime);
             diffArgument.setPDeductionTime(pDeductionTime);
@@ -1688,12 +1740,28 @@ public class Worker {
         // 灌溉单元计算
         for (Field field1 : fieldUnitList) {
             Double fieldSize = field1.getFieldSize();
+            Diff diff = getDiff(field1, task);
+            if (diff == null) {
+                continue;
+            }
+            Double needK = diff.getFertilizerK();
+            Double needP = diff.getFertilizerP();
+            Double needN = diff.getFertilizerN();
+            Double needWater = diff.getWater();
+            fertilizerN += needK;
+            fertilizerK += needP;
+            fertilizerP += needP;
+            waterNum += needWater;
+            task.setFertilizerK(fertilizerK);
+            task.setFertilizerN(fertilizerN);
+            task.setFertilizerP(fertilizerP);
+            task.setWater(waterNum);
             // 需要钾肥量
-            double kNum = fertilizerK / fieldSize;
+            double kNum = needK / fieldSize;
             // 需要氮肥量
-            double nNum = fertilizerN / fieldSize;
+            double nNum = needN / fieldSize;
             // 需要磷肥量
-            double pNum = fertilizerP / fieldSize;
+            double pNum = needP / fieldSize;
             minNNum = Math.min(minNNum, nNum);
             maxNNum = Math.max(maxNNum, nNum);
             minKNum = Math.min(minKNum, kNum);
@@ -1701,7 +1769,7 @@ public class Worker {
             minPNum = Math.min(minPNum, pNum);
             maxPNum = Math.max(maxPNum, pNum);
             // 单位纯水补偿量
-            double waterCompensationNum = waterNum
+            double waterCompensationNum = needWater
                     / ((fieldSize - headWaterConsumption - tailWaterConsumption - kNum - nNum - pNum) * waterAndFertilizer);
             maxWaterCompensationNum = Math.max(maxWaterCompensationNum, waterCompensationNum);
             // 填充map参数
@@ -1728,17 +1796,21 @@ public class Worker {
         double pFerCompensationMax = 0d;
         // 单位面积肥补偿量
         for (Field field1 : fieldUnitList) {
+            DiffArgument diffArgument = fieldDiffArgumentMap.get(field1);
+            double kNum = diffArgument.getKNum();
+            double pNum = diffArgument.getPNum();
+            double nNum = diffArgument.getNNum();
             // 单位面积氮肥补偿量
-            double nFerCompensation = fertilizerN - minNNum;
+            double nFerCompensation = nNum - minNNum;
             nFerCompensationMax = Math.max(nFerCompensationMax, nFerCompensation);
             // 单位面积钾肥补偿量
-            double kFerCompensation = fertilizerK - minKNum;
+            double kFerCompensation = kNum - minKNum;
             kFerCompensationMax = Math.max(kFerCompensation, kFerCompensationMax);
             // 单位面积磷肥补偿量
-            double pFerCompensation = fertilizerP - minPNum;
+            double pFerCompensation = pNum - minPNum;
             pFerCompensationMax = Math.max(pFerCompensation, pFerCompensationMax);
 
-            DiffArgument diffArgument = fieldDiffArgumentMap.get(field1);
+
             diffArgument.setNFerCompensation(nFerCompensation);
             diffArgument.setKFerCompensation(kFerCompensation);
             diffArgument.setPFerCompensation(pFerCompensation);
@@ -2360,12 +2432,28 @@ public class Worker {
         // 灌溉单元计算
         for (Field field1 : fieldUnitList) {
             Double fieldSize = field1.getFieldSize();
+            Diff diff = getDiff(field1, task);
+            if (diff == null) {
+                continue;
+            }
+            Double needK = diff.getFertilizerK();
+            Double needP = diff.getFertilizerP();
+            Double needN = diff.getFertilizerN();
+            Double needWater = diff.getWater();
+            fertilizerN += needK;
+            fertilizerK += needP;
+            fertilizerP += needP;
+            waterNum += needWater;
+            task.setFertilizerK(fertilizerK);
+            task.setFertilizerN(fertilizerN);
+            task.setFertilizerP(fertilizerP);
+            task.setWater(waterNum);
             // 需要钾肥量
-            double kNum = fertilizerK / fieldSize;
+            double kNum = needK / fieldSize;
             // 需要氮肥量
-            double nNum = fertilizerN / fieldSize;
+            double nNum = needN / fieldSize;
             // 需要磷肥量
-            double pNum = fertilizerP / fieldSize;
+            double pNum = needP / fieldSize;
             minNNum = Math.min(minNNum, nNum);
             maxNNum = Math.max(maxNNum, nNum);
             minKNum = Math.min(minKNum, kNum);
@@ -2373,7 +2461,7 @@ public class Worker {
             minPNum = Math.min(minPNum, pNum);
             maxPNum = Math.max(maxPNum, pNum);
             // 单位纯水补偿量
-            double waterCompensationNum = waterNum
+            double waterCompensationNum = needWater
                     / ((fieldSize - headWaterConsumption - tailWaterConsumption - kNum - nNum - pNum) * waterAndFertilizer);
             maxWaterCompensationNum = Math.max(maxWaterCompensationNum, waterCompensationNum);
             // 填充map参数
@@ -2400,17 +2488,20 @@ public class Worker {
         double pFerCompensationMax = 0d;
         // 单位面积肥补偿量
         for (Field field1 : fieldUnitList) {
+            DiffArgument diffArgument = fieldDiffArgumentMap.get(field1);
+            double nNum = diffArgument.getNNum();
+            double kNum = diffArgument.getKNum();
+            double pNum = diffArgument.getPNum();
             // 单位面积氮肥补偿量
-            double nFerCompensation = fertilizerN - minNNum;
+            double nFerCompensation = nNum - minNNum;
             nFerCompensationMax = Math.max(nFerCompensationMax, nFerCompensation);
             // 单位面积钾肥补偿量
-            double kFerCompensation = fertilizerK - minKNum;
+            double kFerCompensation = kNum - minKNum;
             kFerCompensationMax = Math.max(kFerCompensation, kFerCompensationMax);
             // 单位面积磷肥补偿量
-            double pFerCompensation = fertilizerP - minPNum;
+            double pFerCompensation = pNum - minPNum;
             pFerCompensationMax = Math.max(pFerCompensation, pFerCompensationMax);
 
-            DiffArgument diffArgument = fieldDiffArgumentMap.get(field1);
             diffArgument.setNFerCompensation(nFerCompensation);
             diffArgument.setKFerCompensation(kFerCompensation);
             diffArgument.setPFerCompensation(pFerCompensation);
@@ -2982,5 +3073,15 @@ public class Worker {
         tapsCloseControl.set("flow_rate", 0);
         tapsCloseControl.set("control_Cmd", 0);
         return JSONUtil.toJsonStr(resultObject);
+    }
+
+
+    private Diff getDiff(Field field1, Task task) {
+        String fieldUnitId = field1.getFieldUnitId();
+        LambdaQueryWrapper<Diff> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(Diff::getTaskId, task.getId());
+        wrapper.eq(Diff::getFieldUnitId, fieldUnitId);
+        Diff diff = diffService.getOne(wrapper);
+        return diff;
     }
 }

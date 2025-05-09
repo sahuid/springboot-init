@@ -7,6 +7,7 @@ import com.sahuid.springbootinit.model.req.field.AddFieldInfoRequest;
 import com.sahuid.springbootinit.model.req.task.AddTaskInfoRequest;
 import com.sahuid.springbootinit.model.req.task.QueryTaskByPage;
 import com.sahuid.springbootinit.model.req.task.UpdateTaskByIdRequest;
+import com.sahuid.springbootinit.model.vo.TaskVo;
 
 /**
 * @author wxb
@@ -26,7 +27,7 @@ public interface TaskService extends IService<Task> {
      * @param queryTaskByPage
      * @return
      */
-    Page<Task> queryTaskByPage(QueryTaskByPage queryTaskByPage);
+    Page<TaskVo> queryTaskByPage(QueryTaskByPage queryTaskByPage);
 
     /**
      * 根据 id 修改任务信息
@@ -39,4 +40,10 @@ public interface TaskService extends IService<Task> {
      * @param taskId
      */
     void deleteTaskById(Long taskId);
+
+    /**
+     * 添加差异性任务
+     * @param addFieldInfoRequest
+     */
+    void addDiffTaskInfo(AddTaskInfoRequest addFieldInfoRequest);
 }

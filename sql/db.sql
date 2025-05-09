@@ -48,13 +48,14 @@ CREATE TABLE `task` (
                         `fieldId` varchar(255) NOT NULL COMMENT '地块的编号',
                         `fieldUnitId` varchar(255) NOT NULL COMMENT '灌溉单元编号',
                         `taskId` varchar(255) NOT NULL COMMENT '灌溉任务编号',
-                        `water` float NOT NULL COMMENT '需水量（单位：m3）',
-                        `fertilizerN` float NOT NULL COMMENT '需氮肥量（单位：kg）',
-                        `fertilizerP` float NOT NULL COMMENT '需磷肥量（单位：kg）',
-                        `fertilizerK` float NOT NULL COMMENT '需钾肥量（单位：kg）',
+                        `water` float DEFAULT NULL COMMENT '需水量（单位：m3）',
+                        `fertilizerN` float DEFAULT '0' COMMENT '需氮肥量（单位：kg）',
+                        `fertilizerP` float DEFAULT '0' COMMENT '需磷肥量（单位：kg）',
+                        `fertilizerK` float DEFAULT '0' COMMENT '需钾肥量（单位：kg）',
                         `startTime` datetime NOT NULL COMMENT '作业的开始时间',
+                        `type` tinyint DEFAULT '0' COMMENT '任务类型：0-整体性/1-差异性',
                         PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=33 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 
 CREATE TABLE `group_manager` (
@@ -82,3 +83,13 @@ CREATE TABLE `argument` (
                             `fieldId` bigint NOT NULL COMMENT '地块编号',
                             PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+
+CREATE TABLE `diff` (
+                        `taskId` bigint NOT NULL COMMENT '任务id',
+                        `fieldUnitId` varchar(255) NOT NULL COMMENT '灌溉单元编号',
+                        `water` float DEFAULT NULL COMMENT '需水量',
+                        `fertilizerN` float DEFAULT NULL COMMENT '需氮量',
+                        `fertilizerP` float DEFAULT NULL COMMENT '需磷量',
+                        `fertilizerK` float DEFAULT NULL COMMENT '需钾量'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
